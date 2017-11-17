@@ -1,0 +1,2 @@
+class capsuleNetwork():
+    pass
