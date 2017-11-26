@@ -103,3 +103,5 @@ ENV/
 # Tensorflow logs and results
 */logs
 */trained
+
+*/data
