@@ -3,34 +3,9 @@ import scipy
 import numpy as np
 import pickle
 import tensorflow as tf
+import matplotlib.pyplot as plt
 
 from config import cfg
-
-def load_mnist(path, is_training):
-    fd = open(os.path.join(cfg.dataset, 'train-images-idx3-ubyte'))
-    loaded = np.fromfile(file=fd, dtype=np.uint8)
-    trX = loaded[16:].reshape((60000, 28, 28, 1)).astype(np.float)
-
-    fd = open(os.path.join(cfg.dataset, 'train-labels-idx1-ubyte'))
-    loaded = np.fromfile(file=fd, dtype=np.uint8)
-    trY = loaded[8:].reshape((60000)).astype(np.int32)
-
-    fd = open(os.path.join(cfg.dataset, 't10k-images-idx3-ubyte'))
-    loaded = np.fromfile(file=fd, dtype=np.uint8)
-    tsX = loaded[16:].reshape((10000, 28, 28,1)).astype(np.float)
-
-    fd = open(os.path.join(cfg.dataset, 't10k-labels-idx1-ubyte'))
-    loaded = np.fromfile(file=fd, dtype=np.uint8)
-    tsY = loaded[8:].reshape((10000)).astype(np.int32)
-
-    trX = tf.convert_to_tensor(trX / 255., tf.float32)
-
-#    trY = tf.one_hot(trY, depth=10, axis=1, dtype=tf.float32)
-#    tsY = tf.one_hot(tsY, depth=10, axis=1, dtype=tf.float32)
-
-    if is_training:
-        return trX, trY
-    return tsX / 255., tsY
 
 def unpickle(f):
     with open(os.path.join(cfg.dataset, f), 'rb') as fo:
@@ -42,6 +17,14 @@ def one_hot(vec, vals=10):
     out = np.zeros((n, vals)).astype(np.int32)
     out[range(n), vec] = 1
     return out
+
+def display_cifar(images, size):
+    n = len(images)
+    plt.figure()
+    plt.gca().set_axis_off()
+    im = np.vstack([np.hstack([images[np.random.choice(n)] for i in range(size)]) for i in range(size)])
+    plt.imshow(im)
+    plt.show()
 
 class CifarLoader():
     def __init__(self, source):
@@ -56,6 +39,9 @@ class CifarLoader():
         n = len(images)
         self.images = images.reshape(n, 3, 32, 32).transpose(0, 2, 3, 1).astype(np.float32)/255
         self.labels = np.hstack([d[b'labels'] for d in data]).astype(np.int32)
+
+        self.images = np.mean(images, axis=1)
+        display_cifar(self.images, 10)
         
         return self
 
