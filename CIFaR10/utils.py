@@ -23,7 +23,7 @@ def display_cifar(images, size):
     plt.figure()
     plt.gca().set_axis_off()
     im = np.vstack([np.hstack([images[np.random.choice(n)] for i in range(size)]) for i in range(size)])
-    plt.imshow(im)
+    plt.imshow(np.squeeze(im))
     plt.show()
 
 class CifarLoader():
@@ -37,11 +37,11 @@ class CifarLoader():
         data = [unpickle(f) for f in self._source]
         images = np.vstack([d[b'data'] for d in data])
         n = len(images)
-        self.images = images.reshape(n, 3, 32, 32).transpose(0, 2, 3, 1).astype(np.float32)/255
+        self.images = images.reshape(n, 3, 32, 32).mean(1, keepdims=True).transpose(0, 2, 3, 1).astype(np.float32)
         self.labels = np.hstack([d[b'labels'] for d in data]).astype(np.int32)
 
-        self.images = np.mean(images, axis=1)
-        display_cifar(self.images, 10)
+#        print(self.images.shape)
+#        display_cifar(self.images, 10)
         
         return self
 

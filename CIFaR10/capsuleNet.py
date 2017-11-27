@@ -79,7 +79,7 @@ class CapsNet(object):
             assert fc1.get_shape() == [cfg.batch_size, 512], fc1.get_shape()
             fc2 = tf.contrib.layers.fully_connected(fc1, num_outputs=1024)
             assert fc2.get_shape() == [cfg.batch_size, 1024], fc2.get_shape()
-            self.decoded = tf.contrib.layers.fully_connected(fc2, num_outputs=3072, activation_fn=tf.sigmoid)
+            self.decoded = tf.contrib.layers.fully_connected(fc2, num_outputs=1024, activation_fn=tf.sigmoid)
 
     def loss(self):
         # margin loss
@@ -109,7 +109,7 @@ class CapsNet(object):
         train_summary.append(tf.summary.scalar('train/margin_loss', self.margin_loss))
         train_summary.append(tf.summary.scalar('train/reconstruction_loss', self.reconstruction_loss))
         train_summary.append(tf.summary.scalar('train/total_loss', self.total_loss))
-        recon_img = tf.reshape(self.decoded, shape=(cfg.batch_size, 32, 32, 3))
+        recon_img = tf.reshape(self.decoded, shape=(cfg.batch_size, 32, 32, 1))
         train_summary.append(tf.summary.image('reconstruction_img', recon_img))
         self.train_summary = tf.summary.merge(train_summary)
 
