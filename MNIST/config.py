@@ -10,7 +10,7 @@ flags.DEFINE_float('m_minus', 0.1, 'm minus')
 flags.DEFINE_float('lambda_val', 0.5, 'weight of loss for absent digit classes')
 
 ## training
-flags.DEFINE_integer('batch_size', 64, 'batch size')
+flags.DEFINE_integer('batch_size', 32, 'batch size')
 flags.DEFINE_integer('epochs', 50, 'epochs')
 flags.DEFINE_integer('iter_routing', 3, 'number of iterations in routing alg')
 flags.DEFINE_boolean('mask_with_y', True, 'use the true label to mask out target capsule')
