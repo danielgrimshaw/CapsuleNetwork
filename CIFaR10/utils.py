@@ -37,19 +37,21 @@ class CifarLoader():
         data = [unpickle(f) for f in self._source]
         images = np.vstack([d[b'data'] for d in data])
         n = len(images)
-        self.images = images.reshape(n, 3, 32, 32).mean(1, keepdims=True).transpose(0, 2, 3, 1).astype(np.float32)
+        self.images = images.reshape(n, 3, 32, 32).mean(1, keepdims=True)
+        self.images = self.images.transpose(0, 2, 3, 1)
+        self.images = self.images / 255.0
+        self.images = self.images.astype(np.float32)
+        self.images = tf.convert_to_tensor(self.images, tf.float32)
+
         self.labels = np.hstack([d[b'labels'] for d in data]).astype(np.int32)
+#        self.labels = tf.one_hot(self.labels, depth=10, dtype=tf.int32)
 
-#        print(self.images.shape)
-#        display_cifar(self.images, 10)
-        
+#        print(self.labels[0].shape)
+#        input(self.labels[0])
+#        print(self.images[0].shape)
+#        input(self.images[0])
+
         return self
-
-    def next_batch(self, batch_size):
-        x = self.images[selt._i:self._i+batch_size]
-        y = self.labels[self._i:self._i+batch_size]
-        self._i = (self._i + batch_size) % len(self.images)
-        return x, y
 
 class CifarDataManager():
     def __init__(self):
